@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import PostForm,ProfileForm, RelationshipForm
+from .forms import PostForm, ProfileForm, RelationshipForm
 from .models import Post, Comment, Like, Profile, Relationship
 from datetime import datetime, date
 
