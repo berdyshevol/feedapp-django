@@ -18,8 +18,28 @@ def index(request):
 
 
 
-#@login_required
+@login_required
+def profile(request):
+    profile = Profile.objects.filter(user=request.user)
+    if not profile.exists():
+        profile = Profile.objects.create(user=request.user)
+    profile = Profile.objects.get(user=request.user)
+    if request.method != 'POST':
+        form = ProfileForm(instance=profile)
+    else:
+        form = ProfileForm(instance=profile, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('FeedApp:profile')
+    
+    context = {'form': form}
+    return render(request, 'FeedApp/profile.html', context)
 
+@login_required
+def myfeed(request):
+    comments_count = []
+    likes_count = []
+    posts = Post.objects.filter(user=request.user).order_by('-date-posted')
 
-
-
+    for post in posts:
+        c_count = Comment.objects.filter(post=post).count()
