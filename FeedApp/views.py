@@ -100,8 +100,6 @@ def comments(request, post_id):
 
 @login_required
 def friends(request):
-    # get the admin profile and user profile to create the first relationship
-    admin_profile = Profile.objects.get(user=1)
     user_profile = Profile.objects.get(user=request.user)
 
     # to get my friends
@@ -118,10 +116,6 @@ def friends(request):
     # to get friends that sent request to me
     request_received_profiles = Relationship.objects.filter(receiver=user_profile, status='sent')
 
-    if not user_relationships.exists():
-        Relationship.objects.create(sender=user_profile, receiver=admin_profile, status='sent')
-        
-    
     if request.method == 'POST' and request.POST.get('send_requests'):
         receiver_profile_ids = request.POST.getlist('send_requests')
         for receiver_profile_id in receiver_profile_ids:
