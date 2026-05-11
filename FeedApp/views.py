@@ -113,7 +113,7 @@ def friends(request):
     request_sent_from_profiles = user_relationships.values('receiver')
     
     # to get eligible profiles - exclude myself, my friends, and profiles I sent request to
-    profiles_ = Profile.objects.exclude(user=request.user).exclude(user__in=user_friends_profiles).exclude(user__in=request_sent_from_profiles)
+    profiles_to_add = Profile.objects.exclude(user=request.user).exclude(id__in=user_friends_profiles).exclude(id__in=request_sent_from_profiles)
     
     # to get friends that sent request to me
     request_received_profiles = Relationship.objects.filter(receiver=user_profile, status='sent')
@@ -137,3 +137,11 @@ def friends(request):
             user_profile.friends.add(relationship_obj.sender.user)
             relationship_obj.sender.friends.add(user_profile.user)
         return redirect('FeedApp:friends')
+
+    context = {
+        'user_friends_profiles': user_friends_profiles,
+        'profiles_to_add': profiles_to_add,
+        'request_received_profiles': request_received_profiles,
+        'user_relationships': user_relationships,
+    }
+    return render(request, 'FeedApp/friends.html', context)
