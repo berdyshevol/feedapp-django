@@ -1,5 +1,7 @@
 # FeedApp — Django Social Media Project
 
+**Live demo:** https://feedapp-oleg.onrender.com/
+
 A simple social network built with Django: users, posts, comments, likes, and friends.
 
 ## Features
