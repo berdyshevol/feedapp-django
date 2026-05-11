@@ -64,3 +64,13 @@ def new_post(request):
     
     context = {'form': form}
     return render(request, 'FeedApp/new_post.html', context)
+
+@login_required
+def comments(request, post_id):
+    if request.method == 'POST' and request.POST.get('btn1'):
+        comment = request.POST.get('comment')
+        Comment.objects.create(post_id=post_id, user=request.user, text=comment)
+    comments = Comment.objects.filter(post_id=post_id).order_by('-date_added')
+    post = Post.objects.get(id=post_id)
+    context = {'comments': comments, 'post': post}
+    return render(request, 'FeedApp/comments.html', context)
